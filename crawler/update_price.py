@@ -36,7 +36,7 @@ current_date = datetime.now()
 webhook_url = "https://discord.com/api/webhooks/1215532903015129149/nDyv8xTp-HnI9nuL8YqEMvOKKqMQsB3XFYXH_XCoDppYQIOos2ftH6_InaJD8j_WYzGN"
 
 async def magalu():
-    anuncios = db.execute("SELECT id, origin_url FROM public.product WHERE store = 'magazine luiza' limit 2")
+    anuncios = db.execute("SELECT id, origin_url FROM public.product WHERE store = 'magazine luiza'")
     
     verificados = 0
     alterados = 0
