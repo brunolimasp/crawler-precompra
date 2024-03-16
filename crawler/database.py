@@ -6,17 +6,19 @@ from sqlalchemy import URL, create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
 
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class DataBase:
     def __init__(self):
 
         self.url_object = URL.create(
-            "postgresql",
-            username="develop",
-            password="sv32961018",
-            host="postgresql",
-            database="db_precompra",
+            os.getenv("DB_ENGINE"),
+            username=os.getenv("DB_USERNAME"),
+            password=os.getenv("DB_PASSWORD"),
+            host=os.getenv("DB_HOST", "localhost"),
+            database=os.getenv("DB_DATABASE"),
         )
         # Tenta conectar ao banco de dados
         try:
