@@ -65,7 +65,7 @@ async def magalu():
                     #  --UPDATE 1 COMPRA RO VALOR E O ULTIMO REGISTRO E INCLUI OUTRO NOVO 
                     #  --UPDATE 1 ATUALIZA O VALOR DA ULTIMA DATA
                     query = (f"""UPDATE product
-                                SET price = {price}, updated_at = '{current_date}', price_historic = price_historic || '{insert_new_price}'
+                                SET price = {price}, is_active='true', updated_at = '{current_date}', price_historic = price_historic || '{insert_new_price}'
                                 WHERE id = {id} AND ((SELECT price FROM(
                                                      SELECT (jsonb_array_elements(price_historic)->>'price')::NUMERIC AS price,
                                                         (jsonb_array_elements(price_historic)->>'date')::TIMESTAMP AS reference_time
@@ -76,7 +76,7 @@ async def magalu():
                                                         FROM product WHERE id = {id}  ORDER BY reference_time DESC LIMIT 1)) != '{current_date}'::DATE);
 
                                 UPDATE product
-                                SET price = {price}, updated_at = '{current_date}', price_historic = jsonb_set(price_historic::jsonb, '{update_price}', '{price}'::jsonb)
+                                SET price = {price}, is_active='true', updated_at = '{current_date}', price_historic = jsonb_set(price_historic::jsonb, '{update_price}', '{price}'::jsonb)
                                 WHERE id = {id} AND ((SELECT reference_date FROM(
                                                                     SELECT (jsonb_array_elements(price_historic)->>'price')::NUMERIC AS price,
                                                                     (jsonb_array_elements(price_historic)->>'date')::DATE AS reference_date
@@ -91,6 +91,8 @@ async def magalu():
                         alterados += 1
                 
                 else:
+                    query_desativa = f"""UPDATE public.product SET is_active='false' WHERE  id={id}; """
+                    db.execute(query_desativa)
                     print("Elemento não encontrado.")
             else:
                 print(f"Erro na solicitação: {response.status_code}")
